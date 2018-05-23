@@ -26,18 +26,33 @@ module EquitracUtilities
       @eqcmd_path  = config[:eqcmd_path]
       @ssh_options = config[:ssh_options]
 
-      raise ArgumentError, 'hostname missing' if hostname.nil? or hostname.empty?
-      raise ArgumentError, 'username missing' if username.nil? or username.empty?
+      raise ArgumentError, 'hostname missing'    if hostname.nil? or hostname.empty?
+      raise ArgumentError, 'username missing'    if username.nil? or username.empty?
       raise ArgumentError, 'servicename missing' if servicename.nil? or servicename.empty?
+
+      # eq_connection_test
+
     end
 
     def run(command:, attributes:)
       cmd = send(command, attributes)
       # ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
-      send_eqcmd(cmd)
+      begin
+        send_eqcmd(cmd)
+      rescue SocketError => error
+        return error
+      end
     end
 
     private
+    # def eq_connection_test
+    #   output = nil
+    #   Net::SSH.start(hostname, username, ssh_options) do |ssh|
+    #     output = ssh.exec!("echo 'hi'")
+    #   end
+    #   output
+    # end
+
     def send_eqcmd(cmd)
       output = nil
       ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"

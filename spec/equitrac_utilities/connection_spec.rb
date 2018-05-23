@@ -1,6 +1,9 @@
 require "spec_helper"
 
 RSpec.describe EquitracUtilities::Connection do
+
+  # let!(:eq) { EquitracUtilities::Connection.new }
+
   context "server paramters are correct" do
     it "shows correct host name from parameters" do
       stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'eq_hostname'))
@@ -71,6 +74,17 @@ RSpec.describe EquitracUtilities::Connection do
       eq = EquitracUtilities::Connection.new
       expect(eq.ssh_options).to eq({})
     end
+    it "uses default eqcmd_path when env var is missing" do
+      stub_const('ENV', ENV.to_hash.merge('EQ_EQCMD_PATH' => nil))
+      eq = EquitracUtilities::Connection.new
+      expect(eq.eqcmd_path).to eq 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe'
+    end
+      it "can send a simple query and gets an expected answer" do
+        eq = EquitracUtilities::Connection.new
+        answer  = eq.send(:send_eqcmd, 'query ur whocares')
+        correct = "Can't find"
+        expect( answer ).to match( correct )
+      end
   end
   context "server parameters are not correct" do
     it "errors when hostname is missing" do
@@ -85,27 +99,28 @@ RSpec.describe EquitracUtilities::Connection do
       stub_const('ENV', ENV.to_hash.merge('EQ_SERVICENAME' => nil))
       expect { EquitracUtilities::Connection.new }.to raise_error(ArgumentError, /servicename missing/)
     end
-    it "uses default eqcmd_path when env var is missing" do
-      stub_const('ENV', ENV.to_hash.merge('EQ_EQCMD_PATH' => nil))
+    it "errors when can't find server name" do
+      stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'invalid.server.com'))
       eq = EquitracUtilities::Connection.new
-      expect(eq.eqcmd_path).to eq 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe'
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            to raise_error(SocketError, /not known/)
+    end
+    xit "errors when connetion times out (net problem)" do
+      # stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'las.ch'))
+      eq = EquitracUtilities::Connection.new( {port: '321'} )
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            to raise_error(SocketError, /timeout/)
+    end
+    xit "errors when cannot connect because invalid ssh_key" do
+      eq = EquitracUtilities::Connection.new({keys: ['~/.ssh/no_key'] })
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
+    end
+    xit "errors when cannot connect because invalid credentials" do
+      # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
+      eq = EquitracUtilities::Connection.new( {auth_methods: ['password'], password: 'junk' } )
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
     end
   end
-  context "it can connect via SSH needs ENV VARS configured" do
-    # it "returns expected SSH results" do
-    #   # allow(eq).to receive(:echo) { 'echo "HI!"' }
-    #   eq = EquitracUtilities::Connection.new
-    #   expect(eq.send(:send_eqcmd, 'echo "HI!"')).to match(/HI/)
-    # end
-    # it "get info on a single user" do
-    #   allow(eq).to receive(:user_query) do |arg1|
-    #     arg1 = {user_id: "lweisbecker"}
-    #     return "query ur lweisbecker"
-    #   end
-    #   answer = eq.run(command: :user_query, attributes: valid_id)
-    #   correct = ""
-    #   expect(answer).to eql(correct)
-    # end
-  end
-  context "it"
 end
