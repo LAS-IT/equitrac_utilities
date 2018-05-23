@@ -5,7 +5,7 @@ require "equitrac_utilities/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "equitrac_utilities"
-  spec.version       = EquitracUtilities::VERSION
+  spec.version       = EquitracUtilities::Version::VERSION
   spec.authors       = ["Bill Tihen", "Lee Weisbecker", "Elliott Herbert"]
   spec.email         = ["btihen@gmail.com", "leeweisbecker@gmail.com"]
 
@@ -28,8 +28,9 @@ Gem::Specification.new do |spec|
   end
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
-  
+  # spec.require_paths = ["lib"]
+  spec.files = Dir['lib/**/*.rb']
+
   spec.add_dependency "net-ssh", "~> 4.0"
 
   spec.add_development_dependency "bundler", "~> 1.16"

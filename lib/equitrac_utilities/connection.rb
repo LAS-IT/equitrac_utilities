@@ -1,0 +1,60 @@
+require 'net/ssh'
+require 'equitrac_utilities/user_commands'
+
+module EquitracUtilities
+  # The Equitrac server definition, handling communication with the server.
+  # @since 0.1.0
+  #
+  # @note If the password is define in the object, it will be included automatically into the options.
+  # @note You can also use environment variables to initialize your server.
+  #
+  # @!attribute [r] eqcmd_path
+  #   @return [String] The path where Equitrac utilities is installed
+  # @!attribute [r] service_name
+  #   @return [String] The name of the Equitrac service.
+  class Connection
+
+    attr_reader :hostname, :username, :servicename, :eqcmd_path, :ssh_options
+
+    include EquitracUtilities::UserCommands
+
+    def initialize(params={})
+      config = defaults.merge(params)
+      @hostname    = config[:hostname]
+      @username    = config[:username]
+      @servicename = config[:servicename]
+      @eqcmd_path  = config[:eqcmd_path]
+      @ssh_options = config[:ssh_options]
+
+      raise ArgumentError, 'hostname missing' if hostname.nil? or hostname.empty?
+      raise ArgumentError, 'username missing' if username.nil? or username.empty?
+      raise ArgumentError, 'servicename missing' if servicename.nil? or servicename.empty?
+    end
+
+    def run(command:, attributes:)
+      cmd = send(command, attributes)
+      send_eqcmd(cmd)
+    end
+
+    private
+    def send_eqcmd(cmd)
+      # ensure file has correct permissions (via remote ssh command)
+      Net::SSH.start(hostname, username, ssh_options) do |ssh|
+        # Capture all stderr and stdout output from a remote process
+        pp hostname
+        output = ssh.exec!(cmd)
+      end
+    end
+
+    def defaults
+      { hostname: ENV['EQ_HOSTNAME'],
+        username: ENV['EQ_USERNAME'],
+        servicename: ENV['EQ_SERVICENAME'],
+        eqcmd_path: ( ENV['EQ_EQCMD_PATH'] || 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe' ),
+        ssh_options: eval(ENV['EQ_SSH_OPTIONS'].to_s),
+        # ssh_options: {verify_host_key: false},
+        # ssh_passwd: ENV['EQ_SSH_PASSWD'],
+      }
+    end
+  end
+end
