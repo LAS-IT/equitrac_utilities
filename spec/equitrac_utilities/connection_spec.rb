@@ -92,10 +92,20 @@ RSpec.describe EquitracUtilities::Connection do
     end
   end
   context "it can connect via SSH needs ENV VARS configured" do
-    it "returns expected SSH results" do
-      eq = EquitracUtilities::Connection.new
-      expect(eq.send(:send_eqcmd, 'echo "HI!"')).to match(/HI/)
-    end
+    # it "returns expected SSH results" do
+    #   # allow(eq).to receive(:echo) { 'echo "HI!"' }
+    #   eq = EquitracUtilities::Connection.new
+    #   expect(eq.send(:send_eqcmd, 'echo "HI!"')).to match(/HI/)
+    # end
+    # it "get info on a single user" do
+    #   allow(eq).to receive(:user_query) do |arg1|
+    #     arg1 = {user_id: "lweisbecker"}
+    #     return "query ur lweisbecker"
+    #   end
+    #   answer = eq.run(command: :user_query, attributes: valid_id)
+    #   correct = ""
+    #   expect(answer).to eql(correct)
+    # end
   end
   context "it"
 end

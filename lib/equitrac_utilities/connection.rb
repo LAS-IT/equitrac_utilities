@@ -33,17 +33,26 @@ module EquitracUtilities
 
     def run(command:, attributes:)
       cmd = send(command, attributes)
-      # send_eqcmd(cmd)
+      # ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
+      send_eqcmd(cmd)
     end
 
     private
     def send_eqcmd(cmd)
+      output = nil
+      ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
       # ensure file has correct permissions (via remote ssh command)
       Net::SSH.start(hostname, username, ssh_options) do |ssh|
         # Capture all stderr and stdout output from a remote process
-        pp hostname
-        output = ssh.exec!(cmd)
+        output = ssh.exec!(ssh_cmd)
       end
+      # EQ56 returns unicode jibberish & looks like
+      # "C\u0000a\u0000n\u0000'\u0000t\u0000 \u0000f\u0000i\u0000n\u0000d"
+      convert_eq56_unicode_to_ascii(output)
+    end
+
+    def convert_eq56_unicode_to_ascii(string)
+      string.gsub("\u0000",'').gsub(/\\/,'')
     end
 
     def defaults

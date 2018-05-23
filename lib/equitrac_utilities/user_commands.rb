@@ -4,8 +4,22 @@ module EquitracUtilities
     def user_query(attr)
       "query ur #{attr[:user_id]}"
     end
+
+    def user_exists?(attr)
+      answer = send_eqcmd( user_query(attr) )
+      if !!(answer =~ /User/)
+        puts "User Exists: #{answer}"
+        return true
+      elsif !!(answer =~ /^Can/)
+        puts "User Not Found: #{answer}"
+        return false
+      else
+        puts "What is this?"
+        raise
+      end
+    end
   end
-end  
+end
 
     # Add user to the system
     # # user id, initial balance, user name, department name, and primary pin required
