@@ -22,7 +22,7 @@ RSpec.describe EquitracUtilities::UserCommands do
     it "builds the query we expect" do
       # answer = eq.user_query(valid_id)
       answer = eq.send(:user_query, valid_id)
-      correct = "query ur lweisbecker"
+      correct = 'query ur lweisbecker'
       expect(answer).to eql(correct)
     end
     it "get info on a single user" do
@@ -48,17 +48,29 @@ RSpec.describe EquitracUtilities::UserCommands do
     end
   end
 
+  context "when user_id not included" do
+    it "raises an error"
+  end
+
   context "test successful user creation" do
-    it "twith vailid attributes"
+    it "with vailid attributes"
   end
-
   context "test failing user creation" do
+    it "with an invalid user id (has a space)"
     it "with an existing user"
+    it "with no username"
+    it "with no group"
   end
-  context "error when user_id not included" do
 
+  context "test successful user modification" do
+    it "with vailid attributes"
   end
-  context "it can connect via SSH" do
+  context "test failing user modification" do
+  it "with an invalid user id (has a space)"
+    it "with an non-existing user"
+    it "with no username"
+    it "with no group"
+  end
 
-  end
+
 end
