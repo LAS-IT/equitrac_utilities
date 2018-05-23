@@ -1,0 +1,11 @@
+---
+- :primary_pin: 12345
+  :user_id: username1
+  :email: username1@examle.com
+  :user_name: FirstName1 LastName1
+  :dept_name: employee
+- :primary_pin: 23456
+  :user_id: username2
+  :email: username2@examle.com
+  :user_name: FirstName2 LastName1
+  :dept_name: student

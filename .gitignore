@@ -11,3 +11,6 @@
 .rspec_status
 
 .rbenv-vars
+
+/examples/connection.yml
+/examples/users.yml
