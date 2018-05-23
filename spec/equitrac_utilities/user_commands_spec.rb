@@ -44,7 +44,7 @@ RSpec.describe EquitracUtilities::UserCommands do
     end
     it "who doesn't exist" do
       answer = eq.run(command: :user_exists?, attributes: notuser_id)
-      expect(answer).to be_falsey
+      expect(answer).to be_truthy
     end
   end
 

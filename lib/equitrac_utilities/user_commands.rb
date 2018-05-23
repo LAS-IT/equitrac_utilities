@@ -7,16 +7,8 @@ module EquitracUtilities
 
     def user_exists?(attr)
       answer = send_eqcmd( user_query(attr) )
-      if !!(answer =~ /User/)
-        puts "User Exists: #{answer}"
-        return true
-      elsif !!(answer =~ /^Can/)
-        puts "User Not Found: #{answer}"
-        return false
-      else
-        puts "What is this?"
-        raise
-      end
+      return true  if !!(answer =~ /User/) # => 0
+      return true if !!(answer =~ /^Can/) # => 0
     end
   end
 end
