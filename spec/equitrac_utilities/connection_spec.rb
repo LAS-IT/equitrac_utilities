@@ -50,7 +50,7 @@ RSpec.describe EquitracUtilities::Connection do
     it "shows default ssh options" do
       stub_const('ENV', ENV.to_hash.merge('EQ_SSH_OPTIONS' => nil))
       eq = EquitracUtilities::Connection.new
-      expect(eq.ssh_options).to eq nil
+      expect(eq.ssh_options).to eq({})
     end
     it "shows ssh options from parameters" do
       eq = EquitracUtilities::Connection.new({ssh_options: {password: 'ssh_password'}})
@@ -66,10 +66,10 @@ RSpec.describe EquitracUtilities::Connection do
       eq = EquitracUtilities::Connection.new({ssh_options: {password: 'ssh_password'}})
       expect(eq.ssh_options).to eq({password: 'ssh_password'})
     end
-    it "ssh options are nil" do
+    it "ssh options are empty" do
       stub_const('ENV', ENV.to_hash.merge('EQ_SSH_OPTIONS' => nil))
       eq = EquitracUtilities::Connection.new
-      expect(eq.ssh_options).to eq nil
+      expect(eq.ssh_options).to eq({})
     end
   end
   context "server parameters are not correct" do
@@ -91,11 +91,10 @@ RSpec.describe EquitracUtilities::Connection do
       expect(eq.eqcmd_path).to eq 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe'
     end
   end
-  context "it can connect via SSH" do
-    it "returns expected output when sending ssh command" do
+  context "it can connect via SSH needs ENV VARS configured" do
+    it "returns expected SSH results" do
       eq = EquitracUtilities::Connection.new
-      allow(eq).to receive(:echo) { 'echo "HI!"' }
-      expect(eq.run(command: :echo, attributes: 'hi')).to eq 'echo "HI!"'
+      expect(eq.send(:send_eqcmd, 'echo "HI!"')).to match(/HI/)
     end
   end
   context "it"

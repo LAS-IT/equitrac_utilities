@@ -33,7 +33,7 @@ module EquitracUtilities
 
     def run(command:, attributes:)
       cmd = send(command, attributes)
-      send_eqcmd(cmd)
+      # send_eqcmd(cmd)
     end
 
     private
@@ -51,10 +51,7 @@ module EquitracUtilities
         username: ENV['EQ_USERNAME'],
         servicename: ENV['EQ_SERVICENAME'],
         eqcmd_path: ( ENV['EQ_EQCMD_PATH'] || 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe' ),
-        ssh_options: eval(ENV['EQ_SSH_OPTIONS'].to_s),
-        # ssh_options: {verify_host_key: false},
-        # ssh_passwd: ENV['EQ_SSH_PASSWD'],
-      }
+        ssh_options: (eval(ENV['EQ_SSH_OPTIONS'].to_s) || {}) }
     end
   end
 end
