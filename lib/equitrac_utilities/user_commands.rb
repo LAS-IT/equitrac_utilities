@@ -47,6 +47,21 @@ module EquitracUtilities
     def user_unlock(attr)
       "unlock ur #{attr[:user_id]}"
     end
+    # Modify a user's information
+    # user_id
+    def user_modify(attributes)
+      defaults = {user_name: "!", min_bal: "!",
+                  email: "!", dept_name: "!", pimary_pin: "!",
+                  secondary_pin: "!", quota: "!", alternate_pin: "!",
+                  home_server: "!", locked: "!", location: "!",
+                  default_bc: "!", additional_info: "!", home_folder: "!"}
+      attr = defaults.merge( attributes )
+      "modify ur #{attr[:user_id]} \"#{attr[:user_name]}\" #{attr[:min_bal]}" +
+      " #{attr[:email]} #{attr[:dept_name]} #{attr[:primary_pin]}" +
+      " #{attr[:secondary_pin]} #{attr[:quota]} #{attr[:alternate_pin]}" +
+      " #{attr[:home_server]} #{attr[:locked]} #{attr[:location]}" +
+      " #{attr[:default_bc]} #{attr[:additional_info]} #{attr[:home_folder]}"
+    end
   end
 end
     # # Modify a user's department
@@ -64,4 +79,3 @@ end
     # #   return "modify ur #{user_id} #{user_name} #{min_bal} #{email} #{dept_name} #{primary_pin} #{secondary_pin} #{quota} #{alternate_pin} #{home_server} #{locked} <location> <default_bc><additional_info> <home_folder>"
     # # end
     #
-  

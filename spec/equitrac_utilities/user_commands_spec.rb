@@ -45,14 +45,17 @@ RSpec.describe EquitracUtilities::UserCommands do
     it "user_lock builds the query we expect" do
       answer  = eq.send(:user_lock, valid_id)
       correct = "lock ur lweisbecker"
+      expect(answer).to eql(correct)
     end
     it "user_unlock builds the query we expect" do
       answer  = eq.send(:user_unlock, valid_id)
       correct = "unlock ur lweisbecker"
+      expect(answer).to eql(correct)
     end
-    xit "user_modify builds the query we expect" do
+    it "user_modify builds the query we expect" do
       answer  = eq.send(:user_modify, change_attribs)
-      correct = "modify ur lweisbecker"
+      correct = "modify ur tempuser \"Temp STAFF\" ! test@example.com employee 99999 ! ! ! ! ! ! ! ! !"
+      expect(answer).to eql(correct)
     end
   end
 
@@ -73,14 +76,10 @@ RSpec.describe EquitracUtilities::UserCommands do
   context "test if a user exists" do
     it "for a user who exists" do
       answer = eq.run(command: :user_exists?, attributes: valid_id)
-      puts "who exists rspec answer"
-      pp answer
       expect(answer).to be_truthy
     end
     it "for a user who doesn't exist" do
-      puts "missing user rspec answer"
       answer = eq.run(command: :user_exists?, attributes: notuser_id)
-      pp answer
       expect(answer).to be_falsey
     end
     it "returns an error with no user_id"
@@ -157,44 +156,24 @@ RSpec.describe EquitracUtilities::UserCommands do
     end
     it "returns an error with no user_id"
   end
-  #
-  # context "test unlock user command" do
-  #   it "gets info on a single user" do
-  #     answer = eq.run(command: :user_unlock, attributes: valid_id)
-  #     correct = "User_ID"
-  #     expect(answer).to match(correct)
-  #   end
-  #   it "does not work  on a user who doesn't exist" do
-  #     answer = eq.run(command: :user_unlock, attributes: notuser_id)
-  #     correct = "Can't find the specified account in database."
-  #     expect(answer).to match(correct)
-  #   end
-  #   it "returns an error with no user_id"
-  # end
 
-  # context "when user_id not included" do
-  #   it "raises an error"
-  # end
-  #
-  # context "test successful user creation" do
-  #   it "with vailid attributes"
-  # end
-  # context "test failing user creation" do
-  #   it "with an invalid user id (has a space)"
-  #   it "with an existing user"
-  #   it "with no username"
-  #   it "with no group"
-  # end
-  #
-  # context "test successful user modification" do
-  #   it "with vailid attributes"
-  # end
-  # context "test failing user modification" do
-  # it "with an invalid user id (has a space)"
-  #   it "with an non-existing user"
-  #   it "with no username"
-  #   it "with no group"
-  # end
-
-
+  context "test modify user command" do
+    before(:each) do
+      eq.run(command: :user_add, attributes: new_attribs)
+    end
+    after(:each) do
+      eq.run(command: :user_delete, attributes: change_attribs)
+    end
+    it "with vailid attributes actually modifies a user" do
+      answer = eq.run(command: :user_modify, attributes: change_attribs)
+      correct = "MODIFY command processed successfully.\r\n\r\n"
+      expect(answer).to eql(correct)
+    end
+    it "does not work on a user who doesn't exist" do
+      answer = eq.run(command: :user_modify, attributes: notuser_id)
+      correct = "Can't find the specified account in database."
+      expect(answer).to match(correct)
+    end
+    it "returns an error with no user_id"
+  end
 end
