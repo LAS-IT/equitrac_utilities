@@ -107,7 +107,8 @@ RSpec.describe EquitracUtilities::Connection do
             to raise_error(SocketError, /not known/)
     end
     it "valid password credentials works" do
-      # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
+      # ssh options
+      # https://net-ssh.github.io/ssh/v1/chapter-2.html
       params = {username: 'remote',
                 ssh_options: {auth_methods: ['password'],
                               password: ENV['EQ_PASSWORD']}}

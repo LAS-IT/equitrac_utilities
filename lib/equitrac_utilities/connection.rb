@@ -57,7 +57,7 @@ module EquitracUtilities
     def send_eqcmd(cmd)
       output = nil
       ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
-      # ensure file has correct permissions (via remote ssh command)
+      # quicker timeout config - https://gist.github.com/makaroni4/8792775
       Timeout::timeout(10) do
         Net::SSH.start(hostname, username, ssh_options) do |ssh|
           # Capture all stderr and stdout output from a remote process
