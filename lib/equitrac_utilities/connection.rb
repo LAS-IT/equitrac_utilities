@@ -30,9 +30,6 @@ module EquitracUtilities
       raise ArgumentError, 'hostname missing'    if hostname.nil? or hostname.empty?
       raise ArgumentError, 'username missing'    if username.nil? or username.empty?
       raise ArgumentError, 'servicename missing' if servicename.nil? or servicename.empty?
-
-      # eq_connection_test
-
     end
 
     def run(command:, attributes:)
@@ -46,14 +43,6 @@ module EquitracUtilities
     end
 
     private
-    # def eq_connection_test
-    #   output = nil
-    #   Net::SSH.start(hostname, username, ssh_options) do |ssh|
-    #     output = ssh.exec!("echo 'hi'")
-    #   end
-    #   output
-    # end
-
     def send_eqcmd(cmd)
       output = nil
       ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
