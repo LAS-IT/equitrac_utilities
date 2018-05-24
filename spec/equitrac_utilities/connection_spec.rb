@@ -3,8 +3,6 @@ require "timeout"
 
 RSpec.describe EquitracUtilities::Connection do
 
-  # let!(:eq) { EquitracUtilities::Connection.new }
-
   context "server paramters are correct" do
     it "shows correct host name from parameters" do
       stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'eq_hostname'))
@@ -128,6 +126,19 @@ RSpec.describe EquitracUtilities::Connection do
       eq = EquitracUtilities::Connection.new({ssh_options: {auth_methods: ['publickey'], keys: ['~/.ssh/no_key']}})
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
+    end
+    it "returns an error when no user_id present - attributes are empty" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = {}
+      answer = eq.run(command: :user_fake, attributes: nouser_id)
+      expect(answer).to match('user_id missing')
+    end
+    it "returns an error when no user_id present" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = { email: "test@example.com", user_name: "Temp NOID",
+                    dept_name: "employee", primary_pin: "99999"}
+      answer = eq.run(command: :user_fake, attributes: nouser_id)
+      expect(answer).to match('user_id missing')
     end
     # Broken tests - When passing a bad password
     # the system will always fail over the interactive password entry

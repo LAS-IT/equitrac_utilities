@@ -3,22 +3,20 @@ require 'timeout'
 require 'equitrac_utilities/user_commands'
 
 module EquitracUtilities
-  # The Equitrac server definition, handling communication with the server.
+
+  # The EquitracUtilities, makes it east to work with Equitac EQCmd.exe commands
   # @since 0.1.0
   #
-  # @note If the password is define in the object, it will be included automatically into the options.
-  # @note You can also use environment variables to initialize your server.
-  #
-  # @!attribute [r] eqcmd_path
-  #   @return [String] The path where Equitrac utilities is installed
-  # @!attribute [r] service_name
-  #   @return [String] The name of the Equitrac service.
+  # @note You should use environment variables to initialize your server.
   class Connection
 
     attr_reader :hostname, :username, :servicename, :eqcmd_path, :ssh_options
 
     include EquitracUtilities::UserCommands
 
+    # Make connection to the Equitrac server
+    # @note Hostname, Username and Servicename are required
+    # @param params [Hash] The server configuration parameters. Options available `:hostname`, `:username`, `:servicename`, `:eqcmd_path`, `:ssh_options`
     def initialize(params={})
       config = defaults.merge(params)
       @hostname    = config[:hostname]
@@ -32,18 +30,21 @@ module EquitracUtilities
       raise ArgumentError, 'servicename missing' if servicename.nil? or servicename.empty?
     end
 
+    # @note Run a command against the Equitrac server
+    #
+    # @param command [Symbol] choose command to perform these include: :user_query, :user_exists? (t/f), :user_add, :user_delete, :user_lock, :user_unlock, :user_modify
+    # @param attributes [Hash] attributes needed to perform command
+    # @return [String] the restult from the ssh command
     def run(command:, attributes:)
-      # Prep command
-      cmd = send(command, attributes)
-      # Execute command
-      answer = send_eqcmd(cmd)
-      # Post processing answer
-      case command
-      when :user_exists?
-        return process_user_exists?(answer)
-      else
-        return answer
+      unless attributes[:user_id].nil? or attributes[:user_id].empty? or attributes[:user_id].eql? ''
+        # Prep command
+        cmd = send(command, attributes)
+        # Execute command
+        answer = send_eqcmd(cmd)
+        # Post processing answer
+        return answer_post_processing(command, answer)
       end
+      return "user_id missing -- #{attributes}"
     end
 
     private
@@ -62,8 +63,17 @@ module EquitracUtilities
       convert_eq56_unicode_to_ascii(output)
     end
 
+    # Clean return from ssh execution
+    #
+    # @param string [String] the string that need to be clean
+    # @return [String] the clean string
     def convert_eq56_unicode_to_ascii(string)
       string.gsub("\u0000",'').gsub(/\\/,'')
+    end
+
+    def answer_post_processing(command, answer)
+      return process_user_exists?(answer) if command.eql? :user_exists?
+      answer
     end
 
     def defaults
