@@ -116,15 +116,6 @@ RSpec.describe EquitracUtilities::Connection do
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             not_to raise_error()
     end
-    xit "invalid password credentials fails" do
-      # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
-      params = {username: 'remote',
-                ssh_options: {auth_methods: ['password'],
-                              password: 'badpass'}}
-      eq = EquitracUtilities::Connection.new( params )
-      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
-            to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
-    end
     # Slow test depends on the timeout that has been set under connection.rb
     it "errors when connetion times out (net problem)" do
       # stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'las.ch'))

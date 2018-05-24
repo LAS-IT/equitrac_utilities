@@ -33,12 +33,16 @@ module EquitracUtilities
     end
 
     def run(command:, attributes:)
+      # Prep command
       cmd = send(command, attributes)
-      # ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
-      begin
-        send_eqcmd(cmd)
-      rescue SocketError => error
-        return error
+      # Execute command
+      answer = send_eqcmd(cmd)
+      # Post processing answer
+      case command
+      when :user_exists?
+        return process_user_exists?(answer)
+      else
+        return answer
       end
     end
 
