@@ -31,10 +31,10 @@ module EquitracUtilities
     end
 
     # Add a user to the system
-    #@note user_id, initial_balance, user_name, department_name, and primary_pin required
+    # @note user_id, initial_balance, user_name, department_name, and primary_pin required
     #
-    #@param attributes [Hash] this attribute MUST include { user_id: "userid", init_bal: 0, username: "Test USER", dept_name: "Testdept", primary_pin: "99999"}
-    #@return [String] Formatted for EQCmd.exe command execution
+    # @param attributes [Hash] this attribute MUST include { user_id: "userid", init_bal: 0, username: "Test USER", dept_name: "Testdept", primary_pin: "99999"}
+    # @return [String] Formatted for EQCmd.exe command execution
     def user_add(attributes)
       defaults = { min_bal: 0.0, secondary_pin: '""',quota: 0,
                   alternate_pin: '""', home_server: '""', locked: 0,
