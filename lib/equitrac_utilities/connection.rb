@@ -1,4 +1,5 @@
 require 'net/ssh'
+require 'timeout'
 require 'equitrac_utilities/user_commands'
 
 module EquitracUtilities
@@ -57,9 +58,11 @@ module EquitracUtilities
       output = nil
       ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
       # ensure file has correct permissions (via remote ssh command)
-      Net::SSH.start(hostname, username, ssh_options) do |ssh|
-        # Capture all stderr and stdout output from a remote process
-        output = ssh.exec!(ssh_cmd)
+      Timeout::timeout(10) do
+        Net::SSH.start(hostname, username, ssh_options) do |ssh|
+          # Capture all stderr and stdout output from a remote process
+          output = ssh.exec!(ssh_cmd)
+        end
       end
       # EQ56 returns unicode jibberish & looks like
       # "C\u0000a\u0000n\u0000'\u0000t\u0000 \u0000f\u0000i\u0000n\u0000d"

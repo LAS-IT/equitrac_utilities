@@ -1,4 +1,5 @@
 require "spec_helper"
+require "timeout"
 
 RSpec.describe EquitracUtilities::Connection do
 
@@ -105,22 +106,47 @@ RSpec.describe EquitracUtilities::Connection do
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(SocketError, /not known/)
     end
-    xit "errors when connetion times out (net problem)" do
-      # stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'las.ch'))
-      eq = EquitracUtilities::Connection.new( {port: '321'} )
-      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
-            to raise_error(SocketError, /timeout/)
-    end
-    xit "errors when cannot connect because invalid ssh_key" do
-      eq = EquitracUtilities::Connection.new({keys: ['~/.ssh/no_key'] })
-      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
-            to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
-    end
-    xit "errors when cannot connect because invalid credentials" do
+    it "valid password credentials works" do
       # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
-      eq = EquitracUtilities::Connection.new( {auth_methods: ['password'], password: 'junk' } )
+      params = {username: 'remote',
+                ssh_options: {auth_methods: ['password'],
+                              password: ENV['EQ_PASSWORD']}}
+      eq = EquitracUtilities::Connection.new( params )
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            not_to raise_error()
+    end
+    xit "invalid password credentials fails" do
+      # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
+      params = {username: 'remote',
+                ssh_options: {auth_methods: ['password'],
+                              password: 'badpass'}}
+      eq = EquitracUtilities::Connection.new( params )
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
     end
+    # Slow test depends on the timeout that has been set under connection.rb
+    it "errors when connetion times out (net problem)" do
+      # stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'las.ch'))
+      eq = EquitracUtilities::Connection.new({ssh_options: {port: '321'}} )
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+              to raise_error(Timeout::Error, /execution expired/)
+              # to raise_error(Net::SSH::ConnectionTimeout)
+    end
+    it "errors when cannot connect because invalid ssh_key" do
+      eq = EquitracUtilities::Connection.new({ssh_options: {auth_methods: ['publickey'], keys: ['~/.ssh/no_key']}})
+      expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+            to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
+    end
+    # Broken tests - When passing a bad password
+    # the system will always fail over the interactive password entry
+    # xit "invalid password credentials fails" do
+    #   # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
+    #   params = {username: 'remote',
+    #             ssh_options: {auth_methods: ['password'],
+    #                           password: 'badpass'}}
+    #   eq = EquitracUtilities::Connection.new( params )
+    #   expect { eq.send(:send_eqcmd, 'query ur whocares') }.
+    #         to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
+    # end
   end
 end
