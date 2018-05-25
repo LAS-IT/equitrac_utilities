@@ -38,16 +38,17 @@ require 'equitrac_utilities/connection'
 eq = EquitracUtilities::Connection.new
 
 # sample user information
-users = { primary_pin: 12345,
+# the dept_name from the example users must exist in your Equitrac environment
+users = { primary_pin: 99999,
           user_id: "username1",
           email: "username1@example.com",
           user_name: "FirstName1 LastName1",
           dept_name: 'employee', init_bal: 0.0 }
-update_users = { primary_pin: 12345,
+update_users = { primary_pin: 99999,
           user_id: "username1",
           email: "nameduser1@example.com",
           user_name: "NewName1 OldName1",
-          dept_name: 'newdept', init_bal: 0.0 }
+          dept_name: 'student', init_bal: 0.0 }
 
 ##############
 # QUERY USER
@@ -78,7 +79,7 @@ eq.run(command: :user_query, attributes: users)
 # MODIFY USER ACCOUNT
 # --------------------
 # modify user account
-eq.run(command: :user_modity, attributes: update_users)
+eq.run(command: :user_modify, attributes: update_users)
 # => "MODIFY command processed successfully.\r\n\r\n"
 # get user details
 eq.run(command: :user_query, attributes: users)
@@ -86,7 +87,7 @@ eq.run(command: :user_query, attributes: users)
 #    "username "NewName1 OldName1" "nameduser1@example.com" "$0.00" "$0.00" "Unlocked"
 #
 # lock user accont
-eq.run(command: :lock, attributes: users)
+eq.run(command: :user_lock, attributes: users)
 # => "LOCK/UNLOCK command processed successfully.\r\n\r\n"
 #
 # get user details
@@ -95,7 +96,7 @@ eq.run(command: :user_query, attributes: users)
 #    "username "NewName1 OldName1" "nameduser1@example.com" "$0.00" "$0.00" "Locked"
 #
 # unlock user accont
-eq.run(command: :unlock, attributes: users)
+eq.run(command: :user_unlock, attributes: users)
 # => "LOCK/UNLOCK command processed successfully.\r\n\r\n"
 #
 # get user details
