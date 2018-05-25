@@ -39,6 +39,7 @@ eq = EquitracUtilities::Connection.new
 
 # sample user information
 # the dept_name from the example users must exist in your Equitrac environment
+# also the primary_ pin can not be currently in use in your Equitrac environment
 users = { primary_pin: 99999,
           user_id: "username1",
           email: "username1@example.com",
