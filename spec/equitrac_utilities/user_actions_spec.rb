@@ -30,7 +30,66 @@ RSpec.describe EquitracUtilities::UserActions do
                             dept_name: "student",
                             primary_pin: "99999"} }
 
-  context "unit tests" do
+  context "build commands" do
+    before(:each) do
+      @od = Object.new
+      @od.extend(EquitracUtilities::UserActions)
+    end
+
+    describe "with missing or bad uid attribute" do
+      it "user_id = nil" do
+        attribs = {user_id: nil}
+        expect { eq.send(:check_user_id, :user_query, attribs) }.
+            to raise_error(ArgumentError, /missing user_id/)
+      end
+      it "user_id = '' (empty)" do
+        attribs = {user_id: ''}
+        expect { eq.send(:check_user_id, :user_query, attribs) }.
+            to raise_error(ArgumentError, /missing user_id/)
+      end
+      it "user_id = 'with space' (no space allowed)" do
+        attribs = {user_id: 'with space'}
+        expect { eq.send(:check_user_id, :user_query, attribs) }.
+            to raise_error(ArgumentError, /user_id has space/)
+      end
+    end
+
+    describe "fix extra spaces with user_id" do
+      # @correct = 'query ur lweisbecker'
+      it "fixes user_id with trailing space" do
+        attribs = {user_id: 'someone '}
+        answer  = eq.send(:check_user_id, :user_query, attribs)
+        correct = 'query ur someone'
+        expect( answer ).to eql( correct )
+      end
+      it "fixes uid with trailing spaces" do
+        attribs = {user_id: 'someone  '}
+        answer  = eq.send(:check_user_id, :user_query, attribs)
+        correct = 'query ur someone'
+        expect( answer ).to eql( correct )
+      end
+      it "fixes uid with leading space" do
+        attribs = {user_id: ' someone'}
+        answer  = eq.send(:check_user_id, :user_query, attribs)
+        correct = 'query ur someone'
+        expect( answer ).to eql( correct )
+      end
+      it "fixes uid with trailing spaces" do
+        attribs = {user_id: '  someone'}
+        answer  = eq.send(:check_user_id, :user_query, attribs)
+        correct = 'query ur someone'
+        expect( answer ).to eql( correct )
+      end
+      it "fixes uid with trailing and leading spaces" do
+        attribs = {user_id: '  someone  '}
+        answer  = eq.send(:check_user_id, :user_query, attribs)
+        correct = 'query ur someone'
+        expect( answer ).to eql( correct )
+      end
+    end
+  end
+
+  context "build actions" do
     it "user_query builds the query we expect" do
       # answer = eq.user_query(valid_id)
       answer = eq.send(:user_query, valid_id)

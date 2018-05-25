@@ -138,18 +138,24 @@ RSpec.describe EquitracUtilities::Connection do
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
     end
+    it "returns an error when bad command sent" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = {}
+      answer = eq.run(command: :no_method, attributes: nouser_id)
+      expect(answer).to match('undefined method')
+    end
     it "returns an error when no user_id present - attributes are empty" do
       eq = EquitracUtilities::Connection.new
       nouser_id = {}
-      answer = eq.run(command: :user_fake, attributes: nouser_id)
-      expect(answer).to match('user_id missing')
+      answer = eq.run(command: :user_query, attributes: nouser_id)
+      expect(answer).to match('missing user_id')
     end
     it "returns an error when no user_id present" do
       eq = EquitracUtilities::Connection.new
       nouser_id = { email: "test@example.com", user_name: "Temp NOID",
                     dept_name: "employee", primary_pin: "99999"}
-      answer = eq.run(command: :user_fake, attributes: nouser_id)
-      expect(answer).to match('user_id missing')
+      answer = eq.run(command: :user_query, attributes: nouser_id)
+      expect(answer).to match('missing user_id')
     end
   end
 end

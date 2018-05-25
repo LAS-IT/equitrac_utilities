@@ -24,6 +24,11 @@ Or install it yourself as:
 
 ## Change Log
 
+* **0.1.1** 2018-05-25
+  - improve error handling for missing methods
+  - improve error handling for missing user_id
+  - improve input cleanup for user_id with trailing & leading spaces
+
 * **0.1.0** 2018-05-24 - initial release
 
 ## Usage

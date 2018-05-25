@@ -36,16 +36,16 @@ module EquitracUtilities
     # @param attributes [Hash] attributes needed to perform command
     # @return [String] the restult from the ssh command
     def run(command:, attributes:)
-      unless attributes[:user_id].nil? or attributes[:user_id].empty? or attributes[:user_id].eql? ''
-        # Prep command
-        action  = send(command, attributes)
-        ssh_cmd = build_full_command(action)
-        # Execute command
-        answer = send_eqcmd(ssh_cmd)
-        # Post processing answer
-        return post_processing(command, answer)
+      result = ''
+      begin
+        action   = send(:check_user_id, command, attributes)
+        ssh_cmd  = build_full_command(action)
+        response = send_eqcmd(ssh_cmd)
+        result   = post_processing(command, response)
+      rescue ArgumentError, NoMethodError => error
+        result   = "#{error.message} -- :#{command} using #{attributes}"
       end
-      return "user_id missing -- #{attributes}"
+      return result
     end
 
     private

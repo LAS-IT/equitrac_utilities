@@ -3,6 +3,20 @@ module EquitracUtilities
   # @note Equitrac Administration Guide - https://download.equitrac.com/271828/EE5.6/Docs/Administration_Guide.pdf
   module UserActions
 
+
+    # Be sure Actions have correct user_id data
+    #
+    # @param action [Symbol] the action to be formatted
+    # @return [String] this attribute MUST include: { user_id: "userid" }
+    def check_user_id(action, attribs)
+      attribs[:user_id] = attribs[:user_id]&.strip
+      answer = send(action, attribs)
+      raise ArgumentError, "missing user_id"   if attribs[:user_id].nil? or
+                                                  attribs[:user_id].empty?
+      raise ArgumentError, "user_id has space" if attribs[:user_id].include?(' ')
+      return answer
+    end
+
     # Get Equitrac User Info
     #
     # @param attr [Hash] this attribute MUST include: { user_id: "userid" }
