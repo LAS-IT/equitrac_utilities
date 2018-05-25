@@ -78,12 +78,21 @@ RSpec.describe EquitracUtilities::Connection do
       eq = EquitracUtilities::Connection.new
       expect(eq.eqcmd_path).to eq 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe'
     end
-      it "can send a simple query and gets an expected answer" do
-        eq = EquitracUtilities::Connection.new
-        answer  = eq.send(:send_eqcmd, 'query ur whocares')
-        correct = "Can't find"
-        expect( answer ).to match( correct )
-      end
+    fit "build_full_command adds server info to user actions" do
+      eq = EquitracUtilities::Connection.new
+      ssh_cmd = "query ur whocares"
+      answer  = eq.send(:build_full_command, ssh_cmd)
+      # correct = "C:\\Program Files\\Equitrac\\Express\\Tools\\EQCmd.exe -seq56 query ur whocares"
+      correct = %q{C:\Program Files\Equitrac\Express\Tools\EQCmd.exe -seq56 query ur whocares}
+      expect( answer ).to match( correct )
+    end
+    fit "send_eqcmd gets expected answer" do
+      eq = EquitracUtilities::Connection.new
+      ssh_cmd = "echo 'student'"
+      answer  = eq.send(:send_eqcmd, ssh_cmd)
+      correct = "student"
+      expect( answer ).to match( correct )
+    end
   end
   context "server parameters are not correct" do
     it "errors when hostname is missing" do
@@ -104,7 +113,7 @@ RSpec.describe EquitracUtilities::Connection do
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(SocketError, /not known/)
     end
-    it "valid password credentials works" do
+    xit "valid password credentials works" do
       # ssh options
       # https://net-ssh.github.io/ssh/v1/chapter-2.html
       params = {username: 'remote',
@@ -115,7 +124,7 @@ RSpec.describe EquitracUtilities::Connection do
             not_to raise_error()
     end
     # Slow test depends on the timeout that has been set under connection.rb
-    it "errors when connetion times out (net problem)" do
+    xit "errors when connetion times out (net problem)" do
       # stub_const('ENV', ENV.to_hash.merge('EQ_HOSTNAME' => 'las.ch'))
       eq = EquitracUtilities::Connection.new({ssh_options: {port: '321'}} )
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
@@ -140,16 +149,5 @@ RSpec.describe EquitracUtilities::Connection do
       answer = eq.run(command: :user_fake, attributes: nouser_id)
       expect(answer).to match('user_id missing')
     end
-    # Broken tests - When passing a bad password
-    # the system will always fail over the interactive password entry
-    # xit "invalid password credentials fails" do
-    #   # stub_const('ENV', ENV.to_hash.merge('EQ_USERNAME' => 'noaccount'))
-    #   params = {username: 'remote',
-    #             ssh_options: {auth_methods: ['password'],
-    #                           password: 'badpass'}}
-    #   eq = EquitracUtilities::Connection.new( params )
-    #   expect { eq.send(:send_eqcmd, 'query ur whocares') }.
-    #         to raise_error(Net::SSH::AuthenticationFailed, /Authentication failed/)
-    # end
   end
 end

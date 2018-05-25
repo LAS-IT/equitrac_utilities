@@ -38,26 +38,32 @@ module EquitracUtilities
     def run(command:, attributes:)
       unless attributes[:user_id].nil? or attributes[:user_id].empty? or attributes[:user_id].eql? ''
         # Prep command
-        cmd = send(command, attributes)
+        action  = send(command, attributes)
+        ssh_cmd = build_full_command(action)
         # Execute command
-        answer = send_eqcmd(cmd)
+        answer = send_eqcmd(ssh_cmd)
         # Post processing answer
-        return answer_post_processing(command, answer)
+        return post_processing(command, answer)
       end
       return "user_id missing -- #{attributes}"
     end
 
     private
-    def send_eqcmd(cmd)
+
+    def build_full_command(action)
+      # sample:
+      "#{eqcmd_path} -s#{servicename} #{action}"
+    end
+
+    def send_eqcmd(command)
       output = nil
-      ssh_cmd = "#{eqcmd_path} -s#{servicename} #{cmd}"
       # quicker timeout config - https://gist.github.com/makaroni4/8792775
-      Timeout::timeout(10) do
+      # Timeout::timeout(10) do
         Net::SSH.start(hostname, username, ssh_options) do |ssh|
           # Capture all stderr and stdout output from a remote process
-          output = ssh.exec!(ssh_cmd)
+          output = ssh.exec!(command)
         end
-      end
+      # end
       # EQ56 returns unicode jibberish & looks like
       # "C\u0000a\u0000n\u0000'\u0000t\u0000 \u0000f\u0000i\u0000n\u0000d"
       convert_eq56_unicode_to_ascii(output)
@@ -71,7 +77,7 @@ module EquitracUtilities
       string.gsub("\u0000",'').gsub(/\\/,'')
     end
 
-    def answer_post_processing(command, answer)
+    def post_processing(command, answer)
       return process_user_exists?(answer) if command.eql? :user_exists?
       answer
     end
