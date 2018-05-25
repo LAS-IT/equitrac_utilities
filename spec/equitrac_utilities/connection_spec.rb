@@ -78,15 +78,17 @@ RSpec.describe EquitracUtilities::Connection do
       eq = EquitracUtilities::Connection.new
       expect(eq.eqcmd_path).to eq 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe'
     end
-    fit "build_full_command adds server info to user actions" do
+    it "build_full_command adds server info to user actions" do
       eq = EquitracUtilities::Connection.new
-      ssh_cmd = "query ur whocares"
-      answer  = eq.send(:build_full_command, ssh_cmd)
+      action = "query ur whocares"
+      answer  = eq.send(:build_full_command, action)
       # correct = "C:\\Program Files\\Equitrac\\Express\\Tools\\EQCmd.exe -seq56 query ur whocares"
+      # correct = %Q{C:\\Program Files\\Equitrac\\Express\\Tools\\EQCmd.exe -seq56 query ur whocares}
+      # correct = 'C:\Program Files\Equitrac\Express\Tools\EQCmd.exe -seq56 query ur whocares'
       correct = %q{C:\Program Files\Equitrac\Express\Tools\EQCmd.exe -seq56 query ur whocares}
       expect( answer ).to match( correct )
     end
-    fit "send_eqcmd gets expected answer" do
+    it "send_eqcmd gets expected answer" do
       eq = EquitracUtilities::Connection.new
       ssh_cmd = "echo 'student'"
       answer  = eq.send(:send_eqcmd, ssh_cmd)
