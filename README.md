@@ -24,10 +24,13 @@ Or install it yourself as:
 
 ## Change Log
 
-* **0.1.1** 2018-05-25
-  - improve error handling for missing methods
-  - improve error handling for missing user_id
-  - improve input cleanup for user_id with trailing & leading spaces
+* **0.1.2** 2018-05-25 - OOPS, missed readme and gemlock
+
+* **0.1.1** 2018-05-25 - Error Handling improvements
+  - for missing methods (actions)
+  - for missing user_id
+  - for user_ids with embedded spaces
+  - cleanup for user_id with trailing & leading spaces
 
 * **0.1.0** 2018-05-24 - initial release
 

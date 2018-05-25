@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    equitrac_utilities (0.1.0)
+    equitrac_utilities (0.1.1)
       net-ssh (~> 4.0)
 
 GEM
