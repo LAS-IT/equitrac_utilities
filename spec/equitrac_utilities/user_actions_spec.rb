@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe EquitracUtilities::UserCommands do
+RSpec.describe EquitracUtilities::UserActions do
 
   let!(:eq)             { EquitracUtilities::Connection.new }
   let( :valid_id)       { {user_id: "lweisbecker"} }

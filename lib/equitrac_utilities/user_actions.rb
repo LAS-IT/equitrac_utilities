@@ -1,7 +1,7 @@
 module EquitracUtilities
 
   # @note Equitrac Administration Guide - https://download.equitrac.com/271828/EE5.6/Docs/Administration_Guide.pdf
-  module UserCommands
+  module UserActions
 
     # Get Equitrac User Info
     #

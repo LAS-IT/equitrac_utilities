@@ -1,6 +1,6 @@
 require 'net/ssh'
 require 'timeout'
-require 'equitrac_utilities/user_commands'
+require 'equitrac_utilities/user_actions'
 
 module EquitracUtilities
 
@@ -12,7 +12,7 @@ module EquitracUtilities
 
     attr_reader :hostname, :username, :servicename, :eqcmd_path, :ssh_options
 
-    include EquitracUtilities::UserCommands
+    include EquitracUtilities::UserActions
 
     # Make connection to the Equitrac server
     # @note Hostname, Username and Servicename are required
