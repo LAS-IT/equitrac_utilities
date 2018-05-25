@@ -1,8 +1,10 @@
 # EquitracUtilities
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/equitrac_utilities`. To experiment with that code, run `bin/console` for an interactive prompt.
+This is an easy to use ruby wrapper for Equitrac Express using EQCmd.exe.  
+So far only user management commands are written. These command are query, add, delete, lock, unlock, and modify.
 
-TODO: Delete this and the text above, and describe your gem
+* Docs found at: https://www.rubydoc.info/gems/equitrac_utilities/
+
 
 ## Installation
 
@@ -20,9 +22,99 @@ Or install it yourself as:
 
     $ gem install equitrac_utilities
 
+## Change Log
+
+* **0.1.0** 2018-05-24 - initial release
+
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# configure
+# Use environmental variables
+###################
+
+# connect using
+require 'equitrac_utilities/connection'
+eq = EquitracUtilities::Connection.new
+
+# sample user information
+users = { primary_pin: 12345,
+          user_id: "username1",
+          email: "username1@example.com",
+          user_name: "FirstName1 LastName1",
+          dept_name: 'employee', init_bal: 0.0 }
+update_users = { primary_pin: 12345,
+          user_id: "username1",
+          email: "nameduser1@example.com",
+          user_name: "NewName1 OldName1",
+          dept_name: 'newdept', init_bal: 0.0 }
+
+##############
+# QUERY USER
+# ------------
+# query user details
+eq.run(command: :user_query, attributes: users)
+# => "Can't find the specified account in database."
+#
+# Confirm existence of user
+eq.run(command: :user_exists?, attributes: users)
+# => False
+#
+# CREATE USER
+# -------------
+# add new user to the equitrac system
+eq.run(command: :user_add, attributes: users)
+# =>"ADD command processed successfully.\r\n\r\n"
+#
+# Confirm existence of user
+eq.run(command: :user_exists?, attributes: users)
+# => True
+#
+# query user details
+eq.run(command: :user_query, attributes: users)
+# => "User_ID" "User_Full_Name" "User_Email" "Balance" "Account_Limit" "Account_Status"
+#    "username "FirstName1 LastName1" "username1@example.com" "$0.00" "$0.00" "Unlocked"
+#
+# MODIFY USER ACCOUNT
+# --------------------
+# modify user account
+eq.run(command: :user_modity, attributes: update_users)
+# => "MODIFY command processed successfully.\r\n\r\n"
+# get user details
+eq.run(command: :user_query, attributes: users)
+# => "User_ID" "User_Full_Name" "User_Email" "Balance" "Account_Limit" "Account_Status"
+#    "username "NewName1 OldName1" "nameduser1@example.com" "$0.00" "$0.00" "Unlocked"
+#
+# lock user accont
+eq.run(command: :lock, attributes: users)
+# => "LOCK/UNLOCK command processed successfully.\r\n\r\n"
+#
+# get user details
+eq.run(command: :user_query, attributes: users)
+# => "User_ID" "User_Full_Name" "User_Email" "Balance" "Account_Limit" "Account_Status"
+#    "username "NewName1 OldName1" "nameduser1@example.com" "$0.00" "$0.00" "Locked"
+#
+# unlock user accont
+eq.run(command: :unlock, attributes: users)
+# => "LOCK/UNLOCK command processed successfully.\r\n\r\n"
+#
+# get user details
+eq.run(command: :user_query, attributes: users)
+# => "User_ID" "User_Full_Name" "User_Email" "Balance" "Account_Limit" "Account_Status"
+#    "username "NewName1 OldName1" "nameduser1@example.com" "$0.00" "$0.00" "Unocked"
+#
+# DELETE USER
+# ------------
+eq.run(command: :user_delete, attributes: users)
+# =>"DELETE command processed successfully.\r\n\r\n"
+#
+# Confirm existence of user
+eq.run(command: :user_exists?, attributes: users)
+# => False
+#
+
+
+```
 
 ## Development
 

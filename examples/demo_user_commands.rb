@@ -1,3 +1,5 @@
+# This is untested and not complete
+
 #!/usr/bin/env ruby -w
 
 require 'yaml'
