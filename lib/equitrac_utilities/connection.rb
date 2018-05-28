@@ -38,7 +38,8 @@ module EquitracUtilities
     def run(command:, attributes:)
       result = ''
       begin
-        action   = send(:check_user_id, command, attributes)
+        action   = send(command, attributes)
+        # action   = send(:check_user_id, command, attributes)
         ssh_cmd  = build_full_command(action)
         response = send_eqcmd(ssh_cmd)
         result   = post_processing(command, response)
@@ -78,8 +79,13 @@ module EquitracUtilities
     end
 
     def post_processing(command, answer)
-      return process_user_exists?(answer) if command.eql? :user_exists?
-      answer
+      # return process_user_exists?(answer) if command.eql? :user_exists?
+      if command.eql? :user_exists?
+        return false if answer.include?("Can't find")
+        return true  if answer.include?("User_ID")
+      end
+      error_count = answer.count { |r| r.include? 'Error' }
+      return answer
     end
 
     def defaults

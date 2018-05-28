@@ -140,4 +140,33 @@ RSpec.describe 'Equitrac Utilities Integration Tests' do
       expect(answer).to match(correct)
     end
   end
+  
+  context "test error conditions return properly" do
+    it "when no user_id present" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = {}
+      answer = eq.run(command: :user_query, attributes: nouser_id)
+      expect(answer).to match('user_id missing')
+    end
+    it "when user_id ''" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = { user_id: '', email: "test@example.com",
+                    user_name: "Temp NOID", dept_name: "employee",
+                    primary_pin: "99999"}
+      answer = eq.run(command: :user_query, attributes: nouser_id)
+      expect(answer).to match('user_id empty')
+    end
+    it "when user_id ' '" do
+      eq = EquitracUtilities::Connection.new
+      nouser_id = { user_id: ' ', email: "test@example.com",
+                    user_name: "Temp NOID", dept_name: "employee",
+                    primary_pin: "99999"}
+      answer = eq.run(command: :user_query, attributes: nouser_id)
+      expect(answer).to match('user_id empty')
+    end
+    it "when queries a non-existent user"
+    it "when tries creates a user that already exists"
+    # "\r\n\r\nError [0]\r\n[-1] {3613} SQL Error: '[Microsoft][ODBC SQL Server Driver][SQL Server]Violatio... 2018  9:52AM, 0).' SQLState='23000' SQLNativeError=2627.\r\r\n\r\nUser could not be added.\r\n\r\n"
+    it "when tries delete a non-existent user"
+  end
 end

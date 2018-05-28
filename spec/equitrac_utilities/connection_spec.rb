@@ -144,18 +144,5 @@ RSpec.describe EquitracUtilities::Connection do
       answer = eq.run(command: :no_method, attributes: nouser_id)
       expect(answer).to match('undefined method')
     end
-    it "returns an error when no user_id present - attributes are empty" do
-      eq = EquitracUtilities::Connection.new
-      nouser_id = {}
-      answer = eq.run(command: :user_query, attributes: nouser_id)
-      expect(answer).to match('missing user_id')
-    end
-    it "returns an error when no user_id present" do
-      eq = EquitracUtilities::Connection.new
-      nouser_id = { email: "test@example.com", user_name: "Temp NOID",
-                    dept_name: "employee", primary_pin: "99999"}
-      answer = eq.run(command: :user_query, attributes: nouser_id)
-      expect(answer).to match('missing user_id')
-    end
   end
 end
