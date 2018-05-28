@@ -83,8 +83,9 @@ module EquitracUtilities
       if command.eql? :user_exists?
         return false if answer.include?("Can't find")
         return true  if answer.include?("User_ID")
+        raise
       end
-      error_count = answer.count { |r| r.include? 'Error' }
+      # error_count = answer.count { |r| r.include? 'Error' }
       return answer
     end
 

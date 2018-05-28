@@ -125,5 +125,10 @@ RSpec.describe EquitracUtilities::UserActions do
       correct = "modify ur tempuser \"Temp STAFF\" ! test@example.com employee 99999 ! ! ! ! ! ! ! ! !"
       expect(answer).to eql(correct)
     end
+    it "user_adjust_set builds the query we expect" do
+      answer = eq.send(:user_adjust_set, valid_id)
+      correct = "adjust ur lweisbecker set 0.0 "
+      expect(answer).to eql(correct)
+    end
   end
 end
