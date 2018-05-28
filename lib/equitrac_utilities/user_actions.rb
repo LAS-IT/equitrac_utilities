@@ -144,6 +144,11 @@ module EquitracUtilities
       " #{attribs[:additional_info]} #{attribs[:home_folder]}"
     end
 
+    # Process to set a new balance for a user in the Equitrac System
+    #
+    # @param attr [Hash] this attribute MUST include: { user_id: "userid" }
+    # @note attr new_bal defaults to 0, if not included in the attributes
+    # @return [String] Formatted for EQCmd.exe command execution
     def user_adjust_set(attribs)
       defaults = {new_bal: 0.0, description: nil}
       attribs = defaults.merge(attribs)
