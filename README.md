@@ -24,6 +24,8 @@ Or install it yourself as:
 
 ## Change Log
 
+* **0.1.3** 2018-05-28 - more Error handling updates and examples
+
 * **0.1.2** 2018-05-25 - OOPS, missed readme and gemlock
 
 * **0.1.1** 2018-05-25 - Error Handling improvements
