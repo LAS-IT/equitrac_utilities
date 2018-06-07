@@ -115,7 +115,8 @@ RSpec.describe EquitracUtilities::Connection do
       expect { eq.send(:send_eqcmd, 'query ur whocares') }.
             to raise_error(SocketError, /not known/)
     end
-    xit "valid password credentials works" do
+    # requires correct password defined as EQ_PASSWORD in .rbenv-vars file
+    it "valid password credentials works" do
       # ssh options
       # https://net-ssh.github.io/ssh/v1/chapter-2.html
       params = {username: 'remote',

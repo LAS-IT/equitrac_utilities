@@ -24,7 +24,9 @@ Or install it yourself as:
 
 ## Change Log
 
-* **0.1.3** 2018-05-28 - more Error handling updates and examples
+* **0.1.3** 2018-05-28
+  - more Error handling updates and examples
+  - added new command for setting user balances(user_adjust_set)
 
 * **0.1.2** 2018-05-25 - OOPS, missed readme and gemlock
 
