@@ -3,7 +3,7 @@
 require 'yaml'
 require 'equitrac_utilities'
 
-yml_info
+yml_info = {}
 begin
   yml_info = YAML.load_file( File.open('connection.yml') )
 rescue Errno::ENOENT, LoadError, Psych::SyntaxError, YAML::Error
@@ -12,16 +12,15 @@ rescue Errno::ENOENT, LoadError, Psych::SyntaxError, YAML::Error
                 eq_service: 'eq56',               # equitrac SERVICE name
               }
 ensure
-  puts "\nSRV_INFO: #{params}"
-  eq = EquitracUtilities::Connection.new( params )
+  puts "\nSRV_INFO: #{yml_info}"
+  eq = EquitracUtilities::Connection.new( yml_info )
   puts "\nSERVER SETTINGS:"
   pp eq
 end
 
-def get_users_info
-  users_file ||= nil
-  users_file = 'users-sample.yml' if File.file?('users-sample.yml')
-  users_file = 'users.yml'        if File.file?('users.yml') # real
+users_file ||= nil
+users_file = 'users-sample.yml' if File.file?('users-sample.yml')
+users_file = 'users.yml'        if File.file?('users.yml') # real
 
 users = []
 begin
