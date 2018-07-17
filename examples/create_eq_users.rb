@@ -55,5 +55,7 @@ Array(users).each do |person|
   # Dry Run commands
   # pp eq.send(:user_add, person )
   # Run Commands
-  pp eq.run(command: :user_add, attributes: person )
+  puts "-" * 15
+  puts "Adding user: #{person}"
+  pp eq.run(command: :user_add, attributes: person ).gsub("\r\n","")
 end
