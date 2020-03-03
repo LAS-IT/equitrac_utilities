@@ -1,3 +1,5 @@
+[![Codeship Status for LAS-IT/equitrac_utilities](https://app.codeship.com/projects/b95070d0-3f8b-0138-2c24-7ef95a7c016e/status?branch=master)](https://app.codeship.com/projects/387663)
+
 # EquitracUtilities
 
 This is an easy to use ruby wrapper for Equitrac Express using EQCmd.exe.  
