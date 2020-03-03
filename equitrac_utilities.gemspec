@@ -31,9 +31,9 @@ Gem::Specification.new do |spec|
   # spec.require_paths = ["lib"]
   spec.files = Dir['lib/**/*.rb']
 
-  spec.add_dependency "net-ssh", "~> 4.2"
+  spec.add_dependency "net-ssh", "~> 5.2"
 
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 10.5"
-  spec.add_development_dependency "rspec", "~> 3.7"
+  spec.add_development_dependency "bundler", "~> 2.1"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "rspec", "~> 3.9"
 end
