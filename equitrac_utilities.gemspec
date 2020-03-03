@@ -6,7 +6,7 @@ require "equitrac_utilities/version"
 Gem::Specification.new do |spec|
   spec.name          = "equitrac_utilities"
   spec.version       = EquitracUtilities::Version::VERSION
-  spec.authors       = ["Bill Tihen", "Lee Weisbecker", "Elliott Herbert"]
+  spec.authors       = ["Bill Tihen", "Lee Weisbecker", "Elliott Hébert"]
   spec.email         = ["btihen@gmail.com", "leeweisbecker@gmail.com"]
 
   spec.summary       = %q{Simple ruby wrapper for equitrac user management}
