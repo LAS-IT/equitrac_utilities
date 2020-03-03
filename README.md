@@ -24,6 +24,10 @@ Or install it yourself as:
 
 ## Change Log
 
+* **0.1.4** 2020-03-03
+  - gem update
+  - fix rake vulnerability
+
 * **0.1.3** 2018-05-28
   - more Error handling updates and examples
   - added new command for setting user balances(user_adjust_set)

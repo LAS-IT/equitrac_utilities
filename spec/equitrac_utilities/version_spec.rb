@@ -5,7 +5,7 @@ RSpec.describe EquitracUtilities::Version do
   end
 
   it "has the correct version number" do
-    expect(EquitracUtilities::Version::VERSION).to eq "0.1.3"
+    expect(EquitracUtilities::Version::VERSION).to eq "0.1.4"
   end
 
 end
